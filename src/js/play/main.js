@@ -283,55 +283,63 @@ function createPasswordInput() {
   return elPasswordWrapper;
 }
 
-function createLoginButton() {
-  if (document.getElementById("loginButton")) return;
-
-  const elLoginButton = document.createElement("button");
-  elLoginButton.className = "contained-button";
-  elLoginButton.id = "loginButton";
-  elLoginButton.innerText = "로그인";
-  elLoginButton.style.cssText = `width: 100%; padding: 10px;  margin: 0; box-sizing: border-box;
+function createButton() {
+  const elButton = document.createElement("button");
+  elButton.style.cssText = `width: 100%; padding: 10px;  margin: 0; box-sizing: border-box;
                                   border: 0.1px solid #7a7a7a; border-radius: 8px; cursor: pointer;
                                   color: #efefef; font-size: 18px; background-color: #2a2a2a;`;
-  elLoginButton.addEventListener("mouseover", function (e) {
+  elButton.addEventListener("mouseover", function (e) {
     e.target.style.backgroundColor = "#121212";
     e.target.style.boxShadow = "inset 6px 4px 8px rgba(255, 255, 255, 0.3)";
   });
-  elLoginButton.addEventListener("mouseout", function (e) {
+  elButton.addEventListener("mouseout", function (e) {
     e.target.style.backgroundColor = "#2a2a2a";
     e.target.style.boxShadow = "none";
   });
-  elLoginButton.addEventListener("mousedown", function (e) {
+  elButton.addEventListener("mousedown", function (e) {
     e.target.style.boxShadow = "inset -8px -4px 8px rgba(255, 255, 255, 0.3)";
   });
-  elLoginButton.addEventListener("mouseup", function (e) {
+  elButton.addEventListener("mouseup", function (e) {
     e.target.style.boxShadow = "inset 5px 4px 8px rgba(255, 255, 255, 0.3)";
   });
+
+  return elButton;
+}
+
+function createLoginButton() {
+  if (document.getElementById("loginButton")) return;
+
+  const elLoginButton = createButton();
+  elLoginButton.id = "loginButton";
+  elLoginButton.innerText = "로그인";
 
   elLoginButton.addEventListener("click", function (e) {
     const nickName = document.getElementById("idInput").value;
     const password = document.getElementById("passwordInput").value;
 
     if (!nickName || !password) return;
-
-    const data = { nickName, password };
-
-    // TODO: url 주소 수정해주세요.
-    fetch("https://other-server.com/signIn", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        document.getElementById("loginVideoBG").remove();
-        document.getElementById("loginBG").remove();
-        playGame();
-      })
-      .catch((error) => {});
+    login(nickName, password);
   });
 
   return elLoginButton;
+}
+
+function login(nickName, password) {
+  const data = { nickName, password };
+
+  // TODO: url 주소 수정해주세요.
+  fetch("https://other-server.com/signIn", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      document.getElementById("loginVideoBG").remove();
+      document.getElementById("loginBG").remove();
+      playGame();
+    })
+    .catch((error) => {});
 }
