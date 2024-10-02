@@ -47,7 +47,7 @@ async function setup() {
   const res = await getServerConfig();
   useWebSocket = res.useWebSocket;
   showWarningIfNeeded(res.startupMode);
-  showPlayButton();
+  showLoginModal();
 }
 
 function showWarningIfNeeded(startupMode) {
@@ -59,15 +59,25 @@ function showWarningIfNeeded(startupMode) {
   }
 }
 
-function showPlayButton() {
+function showLoginModal() {
   playerDiv.style.border = "1px solid #ababab";
   playerDiv.style.boxShadow = "0px 0px 4px #ababab";
 
   const elVideoBG = createLoginBG();
-  playerDiv.append(elVideoBG);
+  if (elVideoBG) playerDiv.append(elVideoBG);
 
   const elLoginForm = createLoginModal();
-  playerDiv.append(elLoginForm);
+  if (elLoginForm) playerDiv.append(elLoginForm);
+}
+
+function showSignUpModal() {
+  document.getElementById("loginBG").remove();
+
+  const elVideoBG = createLoginBG();
+  if (elVideoBG) playerDiv.append(elVideoBG);
+
+  const elSignUpForm = createSignUpModal();
+  if (elSignUpForm) playerDiv.append(elSignUpForm);
 }
 
 function playGame() {
@@ -189,7 +199,7 @@ function createLoginModal() {
                              border-radius: 10px; padding: 30px 20px 40px; 
                              background-color: #121212;`;
 
-  const elLoginTitle = createLoginTitle();
+  const elLoginTitle = createModalTitle("loginTitle", "로그인");
   elLoginBg.append(elLoginTitle);
 
   const elLoginIdInput = createIdInput();
@@ -201,14 +211,41 @@ function createLoginModal() {
   const elSubmitButton = createLoginButton();
   elLoginBg.append(elSubmitButton);
 
+  const elSignUpLink = createSignUpLink();
+  elLoginBg.append(elSignUpLink);
+
   return elLoginBg;
 }
 
+function createSignUpModal() {
+  if (document.getElementById("signUpBG")) return;
+
+  const elSignUpBG = document.createElement("div");
+  elSignUpBG.id = "signUpBG";
+  elSignUpBG.style.cssText = `width: 350px; box-sizing: border-box;
+                             border-radius: 10px; padding: 30px 20px 40px; 
+                             background-color: #121212;`;
+
+  const elLoginTitle = createModalTitle("signUpTitle", "회원가입");
+  elSignUpBG.append(elLoginTitle);
+
+  const elLoginIdInput = createIdInput();
+  elSignUpBG.append(elLoginIdInput);
+
+  const elLoginPasswordInput = createPasswordInput();
+  elSignUpBG.append(elLoginPasswordInput);
+
+  const elSubmitButton = createSignUpButton();
+  elSignUpBG.append(elSubmitButton);
+
+  return elSignUpBG;
+}
+
 function createLoginBG() {
-  if (document.getElementById("loginVideoBG")) return;
+  if (document.getElementById("modalVideoBG")) return;
 
   const elVideoBG = document.createElement("img");
-  elVideoBG.id = "loginVideoBG";
+  elVideoBG.id = "modalVideoBG";
   elVideoBG.src = "../../images/VideoBG.png";
   elVideoBG.style.width = "100%";
   elVideoBG.style.filter = "blur(6px)";
@@ -219,15 +256,15 @@ function createLoginBG() {
   return elVideoBG;
 }
 
-function createLoginTitle() {
-  if (document.getElementById("loginTitle")) return;
+function createModalTitle(id, text) {
+  if (document.getElementById(id)) return;
 
-  const elLoginTitle = document.createElement("div");
-  elLoginTitle.id = "loginTitle";
-  elLoginTitle.innerText = "로그인";
-  elLoginTitle.style.cssText = `color: #efefef; font-size: 24px; font-weight: 650; margin-bottom: 40px;`;
+  const elTitle = document.createElement("div");
+  elTitle.id = id;
+  elTitle.innerText = text;
+  elTitle.style.cssText = `color: #efefef; font-size: 24px; font-weight: 650; margin-bottom: 40px;`;
 
-  return elLoginTitle;
+  return elTitle;
 }
 
 function createIdInput() {
@@ -324,10 +361,67 @@ function createLoginButton() {
   return elLoginButton;
 }
 
+function createSignUpLink() {
+  if (document.getElementById("signUpLink")) return;
+
+  const elSignUpLink = document.createElement("a");
+  elSignUpLink.id = "signUpLink";
+  elSignUpLink.innerText = "회원가입";
+  elSignUpLink.style.textAlign = "center";
+  elSignUpLink.style.cssText = `width: 100%; box-sizing: border-box; display: block; 
+                                cursor: pointer; padding-top: 12px;
+                                text-align: center; color: #efefef; font-size: 14px;`;
+
+  elSignUpLink.addEventListener("click", function (e) {
+    showSignUpModal();
+  });
+
+  return elSignUpLink;
+}
+
+function createSignUpButton() {
+  if (document.getElementById("signUpButton")) return;
+
+  const elLoginButton = createButton();
+  elLoginButton.id = "signUpButton";
+  elLoginButton.innerText = "회원가입";
+
+  elLoginButton.addEventListener("click", function (e) {
+    const nickName = document.getElementById("idInput").value;
+    const password = document.getElementById("passwordInput").value;
+
+    if (!nickName || !password) return;
+    signUp(nickName, password);
+  });
+
+  return elLoginButton;
+}
+
+function signUp(nickName, password) {
+  const data = { nickName, password };
+
+  // TODO: domain 주소 수정해주세요.
+  fetch("https://other-server.com/signUp", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      document.getElementById("modalVideoBG").remove();
+      document.getElementById("signUpBG").remove();
+      playGame();
+      // TODO: 로그인 id 저장
+    })
+    .catch((error) => {});
+}
+
 function login(nickName, password) {
   const data = { nickName, password };
 
-  // TODO: url 주소 수정해주세요.
+  // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signIn", {
     method: "POST",
     headers: {
@@ -337,9 +431,10 @@ function login(nickName, password) {
   })
     .then((response) => response.json())
     .then((data) => {
-      document.getElementById("loginVideoBG").remove();
+      document.getElementById("modalVideoBG").remove();
       document.getElementById("loginBG").remove();
       playGame();
+      // TODO: 로그인 id 저장
     })
     .catch((error) => {});
 }
