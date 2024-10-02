@@ -6,6 +6,7 @@ import { Signaling, WebSocketSignaling } from "../../module/signaling.js";
 import { createSignInModal } from "./elementSignIn.js";
 import { createSignUpModal } from "./elementSignUp.js";
 import { createModalVideoBG } from "./elementCommon.js";
+import { timeFormat } from "../utils.js";
 
 /** @type {Element} */
 let playButton;
@@ -22,6 +23,8 @@ messageDiv.style.display = "none";
 
 const playerDiv = document.getElementById("player");
 const videoPlayer = new VideoPlayer();
+const timeStampDiv = document.getElementById("timeStamp");
+let startTime = 0;
 
 setup();
 
@@ -113,6 +116,23 @@ function playGame() {
   // add video player
   videoPlayer.createPlayer(playerDiv);
   setupRenderStreaming();
+
+  startTime = Date.now();
+  rAFStopwatch(Date.now());
+}
+
+function rAFStopwatch(startTime) {
+  const now = Date.now();
+  const start = startTime;
+  const elapsedTime = now - start;
+
+  timeStampDiv.innerHTML = `<span  style="font-size: 16px;">소요시간: </span> ${timeFormat(
+    elapsedTime
+  )}`;
+
+  requestAnimationFrame(() => {
+    rAFStopwatch(startTime);
+  });
 }
 
 async function setupRenderStreaming() {
@@ -131,11 +151,9 @@ async function setupRenderStreaming() {
 function onConnect() {
   const channel = renderstreaming.createDataChannel("input");
   videoPlayer.setupInput(channel);
-  // showStatsMessage();
 }
 
 async function onDisconnect(connectionId) {
-  clearStatsMessage();
   messageDiv.style.display = "block";
   messageDiv.innerText = `Disconnect peer on ${connectionId}.`;
 
@@ -208,18 +226,13 @@ function showStatsMessage() {
   }, 1000);
 }
 
-function clearStatsMessage() {
-  if (intervalId) {
-    clearInterval(intervalId);
-  }
-  lastStats = null;
-  intervalId = null;
-  messageDiv.style.display = "none";
-  messageDiv.innerHTML = "";
-}
-
 function signIn(nickName, password) {
   const data = { nickName, password };
+
+  document.getElementById("modalVideoBG").remove();
+  document.getElementById("signInBG").remove();
+  playGame();
+  return;
 
   // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signIn", {
@@ -241,6 +254,11 @@ function signIn(nickName, password) {
 
 function signUp(nickName, password) {
   const data = { nickName, password };
+
+  document.getElementById("modalVideoBG").remove();
+  document.getElementById("signUpBG").remove();
+  playGame();
+  return;
 
   // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signUp", {

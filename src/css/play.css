@@ -6,6 +6,13 @@ body {
   margin: 0px;
 }
 
+#timeStamp {
+  text-align: right;
+  color: #efefef;
+  font-size: 28px;
+  padding-right: 8px;
+}
+
 #player {
   position: relative;
   top: 0;
