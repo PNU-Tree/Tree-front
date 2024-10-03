@@ -87,7 +87,6 @@ function showLoginModal() {
 
   const signUpLink = document.getElementById("signUpLink");
   if (signUpLink) {
-    console.log("asdf");
     signUpLink.addEventListener("click", showSignUpModal);
   }
 }
@@ -229,11 +228,6 @@ function showStatsMessage() {
 function signIn(nickName, password) {
   const data = { nickName, password };
 
-  document.getElementById("modalVideoBG").remove();
-  document.getElementById("signInBG").remove();
-  playGame();
-  return;
-
   // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signIn", {
     method: "POST",
@@ -247,18 +241,12 @@ function signIn(nickName, password) {
       document.getElementById("modalVideoBG").remove();
       document.getElementById("signInBG").remove();
       playGame();
-      // TODO: 로그인 id 저장
     })
     .catch((error) => {});
 }
 
 function signUp(nickName, password) {
   const data = { nickName, password };
-
-  document.getElementById("modalVideoBG").remove();
-  document.getElementById("signUpBG").remove();
-  playGame();
-  return;
 
   // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signUp", {
@@ -273,7 +261,6 @@ function signUp(nickName, password) {
       document.getElementById("modalVideoBG").remove();
       document.getElementById("signUpBG").remove();
       playGame();
-      // TODO: 로그인 id 저장
     })
     .catch((error) => {});
 }
