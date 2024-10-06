@@ -217,7 +217,7 @@ function showPerformance() {
       const duration = (stat.timestamp - prevStat.timestamp) / 1000;
       const bitrate = (8 * (stat.bytesReceived - prevStat.bytesReceived)) / duration / 1000;
 
-      console.log(`Bitrate: ${bitrate.toFixed(2)} kbit/sec`);
+      console.log(`Bitrate: ${bitrate.toFixed(2)} kbit/sec, Framerate: ${stat.framesPerSecond}`);
     });
 
     prevStats = stats;
