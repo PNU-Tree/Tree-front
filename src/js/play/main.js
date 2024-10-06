@@ -1,5 +1,4 @@
 import { getServerConfig, getRTCConfiguration } from "../../js/main/config.js";
-import { createDisplayStringArray } from "../../js/main/stats.js";
 import { VideoPlayer } from "../../js/main/videoplayer.js";
 import { RenderStreaming } from "../../module/renderstreaming.js";
 import { Signaling, WebSocketSignaling } from "../../module/signaling.js";
@@ -115,6 +114,7 @@ function playGame() {
   // add video player
   videoPlayer.createPlayer(playerDiv);
   setupRenderStreaming();
+  showPerformance();
 
   startTime = Date.now();
   rAFStopwatch(Date.now());
@@ -201,32 +201,35 @@ function setCodecPreferences() {
 }
 
 /** @type {RTCStatsReport} */
-let lastStats;
-/** @type {number} */
-let intervalId;
-
-function showStatsMessage() {
-  intervalId = setInterval(async () => {
-    if (renderstreaming == null) {
-      return;
-    }
+let prevStats;
+function showPerformance() {
+  setInterval(async () => {
+    if (renderstreaming == null) return;
 
     const stats = await renderstreaming.getStats();
-    if (stats == null) {
-      return;
-    }
+    if ( !stats ) return;
+    if ( !prevStats ) { prevStats = stats; return; }
 
-    const array = createDisplayStringArray(stats, lastStats);
-    if (array.length) {
-      messageDiv.style.display = "block";
-      messageDiv.innerHTML = array.join("<br>");
-    }
-    lastStats = stats;
+    stats.forEach((stat) => {
+      if (stat.type !== "inbound-rtp" || stat.kind !== "video") return;
+
+      const prevStat = prevStats.get(stat.id);
+      const duration = (stat.timestamp - prevStat.timestamp) / 1000;
+      const bitrate = (8 * (stat.bytesReceived - prevStat.bytesReceived)) / duration / 1000;
+
+      console.log(`Bitrate: ${bitrate.toFixed(2)} kbit/sec`);
+    });
+
+    prevStats = stats;
   }, 1000);
 }
 
 function signIn(nickName, password) {
   const data = { nickName, password };
+  document.getElementById("modalVideoBG").remove();
+  document.getElementById("signInBG").remove();
+  playGame();
+  return;
 
   // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signIn", {
