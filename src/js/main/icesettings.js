@@ -95,7 +95,10 @@ export function getServers() {
   const storedServers = window.localStorage.getItem(allServersKey);
 
   if (storedServers === null || storedServers === '') {
-    return [{ urls: ['stun:stun.l.google.com:19302'] }];
+    return [
+              { urls: ['stun:stun.l.google.com:19302'] }, 
+              { urls: ['turn:52.188.94.107:3478'], username: 'tree', credential: 'tree' }
+            ];
   }
   else {
     return JSON.parse(storedServers);
