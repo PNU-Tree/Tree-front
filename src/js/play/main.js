@@ -226,10 +226,6 @@ function showPerformance() {
 
 function signIn(nickName, password) {
   const data = { nickName, password };
-  document.getElementById("modalVideoBG").remove();
-  document.getElementById("signInBG").remove();
-  playGame();
-  return;
 
   // TODO: domain 주소 수정해주세요.
   fetch("https://other-server.com/signIn", {
