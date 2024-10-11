@@ -1248,7 +1248,7 @@ var unityFramework = (() => {
 
           setTimeout(function () {
             tostMessage.classList.remove("active");
-            location.replace("/rank");
+            location.replace("/rank/");
           }, 1000);
         })
         .catch((err) => {

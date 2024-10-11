@@ -7,6 +7,7 @@
     <link rel="shortcut icon" href="https://avatars.githubusercontent.com/u/175100970?s=200&v=4"/>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link rel="stylesheet" href="/webgl/src/pages/globals.css" />
+    <link rel="stylesheet" href="/webgl/src/pages/rank/style.css" />
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/webgl/src/components/header.js"></script>
     <script src="/webgl/src/components/form.js"></script>
@@ -16,7 +17,7 @@
     <custom-header></custom-header>
     <div
       style="
-        width: 450px;
+        width: fit-content;
         display: flex;
         flex-direction: column;
         margin: auto;
@@ -24,7 +25,24 @@
       "
     >
       <page-title title="랭킹"></page-title>
-      
+
+      <div class="tbl-header">
+        <table cellpadding="0" cellspacing="0">
+          <thead>
+            <tr>
+              <th style="width: 50px;">순위</th>
+              <th style="width: 150px;">닉네임</th>
+              <th style="width: 100px;">점수</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+      <div class="tbl-content">
+        <table cellpadding="0" cellspacing="0">
+          <tbody id="table-content">
+          </tbody>
+        </table>
+      </div>
     <span id="tost-message"></span>
     <script src="script.js"></script>
   </body>

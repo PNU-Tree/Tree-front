@@ -29,7 +29,7 @@ signInForm.addEventListener("submit", (e) => {
       tostMessage.classList.add('active');
       setTimeout(function(){
         tostMessage.classList.remove('active');
-        location.replace("/sign-in");
+        location.replace("/sign-in/");
       },1000);
     }
   }).catch((err) => {
