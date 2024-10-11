@@ -1248,7 +1248,7 @@ var unityFramework = (() => {
 
           setTimeout(function () {
             tostMessage.classList.remove("active");
-            location.replace("/");
+            location.replace("/rank");
           }, 1000);
         })
         .catch((err) => {
@@ -17789,7 +17789,7 @@ class Stopwatch {
     )}`;
   }
   getTimes() {
-    return this.times[0] * 60 * 100 + this.times[1] * 100 + this.times[2];
+    return parseInt(this.times[0] * 60 * 100 + this.times[1] * 100 + this.times[2]);
   }
 }
 
