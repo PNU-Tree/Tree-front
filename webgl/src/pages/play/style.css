@@ -55,11 +55,9 @@ body {
 .unity-mobile #unity-footer {
   display: none;
 }
-#unity-webgl-logo {
+#unity-message {
   float: left;
-  width: 204px;
-  height: 38px;
-  background: url("/webgl/public/images/webgl-logo.png") no-repeat center;
+  line-height: 38px;
 }
 #unity-build-title {
   float: right;
