@@ -14,14 +14,18 @@ signInForm.addEventListener("submit", (e) => {
       password: passwordInput.value
     }
   }).then((res) => {
-    console.log(res.data.token);
+    console.log(res.data.token, res.data.playerId);
     if(res.status === 200) {
       const tostMessage = document.getElementById("tost-message");
       tostMessage.innerText = "로그인에 성공했습니다!";
       tostMessage.style.background = "#00ff0070";
       tostMessage.classList.add('active');
 
-      const json = {token: `Bearer ${res.data.token}`, nickname: nicknameInput.value};
+      const json = {
+        token: `Bearer ${res.data.token}`, 
+        nickname: nicknameInput.value, 
+        playerId: res.data.playerId
+      };
       localStorage.setItem("auth", JSON.stringify(json))
 
       setTimeout(function(){
@@ -43,4 +47,3 @@ function tostOn(message, color) {
     tostMessage.classList.remove('active');
   }, 1500);
 }
-
