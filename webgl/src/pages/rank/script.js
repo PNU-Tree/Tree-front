@@ -5,7 +5,8 @@ axios({
   .then((res) => {
     if (res.status !== 200) return;
 
-    const sortedRank = res.data.sort((a, b) => a.rankNumber < b.rankNumber)
+    const sortedRank = res.data.sort((a, b) => a.rankNumber - b.rankNumber)
+
     const tbody = document.getElementById("table-content");
     sortedRank.map((data) => {
       const tr = document.createElement("tr");
