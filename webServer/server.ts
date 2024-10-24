@@ -28,8 +28,7 @@ export const createServer = (config: Options): express.Application => {
     })
   );
   app.use("/signaling", signaling);
-  app.use(express.static(path.join(__dirname, "../src/pages")));
-  app.use(express.static(path.join(__dirname, "../src")));
+  app.use(express.static(path.join(__dirname, "../")));
   app.use("/module", express.static(path.join(__dirname, "../src/js/webApp")));
   app.get("/", (req, res) => {
     const indexPagePath: string = path.join(
