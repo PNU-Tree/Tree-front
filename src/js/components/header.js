@@ -36,7 +36,8 @@ class CustomHeader extends HTMLElement {
             <a id="sign-up" href="/sign-up">회원가입</a>
           </div>
           <div id="game-div">
-            <a id="play-game" href="/play">게임 실행</a>
+            <a id="play-hdrp" href="/hdrp">HDRP</a>
+            <a id="play-fps" href="/fps">FPS</a>
             <a id="rank" href="/rank">랭킹</a>
             <a id="sign-out" href="/sign-out">
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
