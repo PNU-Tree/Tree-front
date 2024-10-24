@@ -20,7 +20,7 @@ class CustomHeader extends HTMLElement {
         }
         .hidden { display: none; }
       </style>
-      <link rel="stylesheet" href="../globals.css" />
+      <link rel="stylesheet" href="/src/css/global.css" />
       <header style="padding: 1rem 10%; display: flex; justify-content: space-between; background-color: rgba(0, 0, 0, 0.2);">
         <a href="/" id="logo" style="display: flex; align-items: center; gap: 0.5rem">
           <img
@@ -32,13 +32,13 @@ class CustomHeader extends HTMLElement {
         </a>
         <div style="display: flex; align-items: center; gap: 0.5rem">
           <div id="sign-div" style="cursor: default">
-            <a id="sign-in" href="/sign-in/">로그인</a> /
-            <a id="sign-up" href="/sign-up/">회원가입</a>
+            <a id="sign-in" href="/sign-in">로그인</a> /
+            <a id="sign-up" href="/sign-up">회원가입</a>
           </div>
           <div id="game-div">
-            <a id="play-game" href="/play/">게임 실행</a>
-            <a id="rank" href="/rank/">랭킹</a>
-            <a id="sign-out" href="/sign-out/">
+            <a id="play-game" href="/play">게임 실행</a>
+            <a id="rank" href="/rank">랭킹</a>
+            <a id="sign-out" href="/sign-out">
               <i class="fa-solid fa-arrow-right-from-bracket"></i>
             </a>
           </div>
