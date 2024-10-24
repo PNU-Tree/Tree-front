@@ -114,5 +114,19 @@ export const createServer = (config: Options): express.Application => {
       }
     });
   });
+  app.get("/rank", (req, res) => {
+    const indexPagePath: string = path.join(
+      __dirname,
+      "../src/pages/rank.html"
+    );
+    fs.access(indexPagePath, (err) => {
+      if (err) {
+        log(LogLevel.warn, `Can't find file ' ${indexPagePath}`);
+        res.status(404).send(`Can't find file ${indexPagePath}`);
+      } else {
+        res.sendFile(indexPagePath);
+      }
+    });
+  });
   return app;
 };
