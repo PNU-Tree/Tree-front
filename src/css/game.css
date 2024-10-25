@@ -1,5 +1,7 @@
-body {
-  margin: 0px;
+div#container {
+  margin: 0 auto 0 auto;
+  max-width: 60vw;
+  padding: 1em 1.5em 1.3em 1.5em;
 }
 
 #player {

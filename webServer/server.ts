@@ -58,7 +58,7 @@ export const createServer = (config: Options): express.Application => {
       }
     });
   });
-  app.get("/fps-microgame", (req, res) => {
+  app.get("/fps", (req, res) => {
     const indexPagePath: string = path.join(
       __dirname,
       "../src/pages/fps.html"

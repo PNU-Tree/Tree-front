@@ -32,7 +32,7 @@ export class VideoPlayer {
     // add fullscreen button
     this.fullScreenButtonElement = document.createElement("img");
     this.fullScreenButtonElement.id = "fullscreenButton";
-    this.fullScreenButtonElement.src = "../images/FullScreen.png";
+    this.fullScreenButtonElement.src = "/public/images/FullScreen.png";
     this.fullScreenButtonElement.addEventListener(
       "click",
       this._onClickFullscreenButton.bind(this)
