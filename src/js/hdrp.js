@@ -78,6 +78,7 @@ function onClickPlayButton() {
   // add video player
   videoPlayer.createPlayer(playerDiv);
   setupRenderStreaming();
+  measurePerformance();
 }
 
 async function setupRenderStreaming() {
@@ -150,27 +151,26 @@ function setCodecPreferences() {
 }
 
 /** @type {RTCStatsReport} */
-let lastStats;
-/** @type {number} */
-let intervalId;
-
-function showStatsMessage() {
-  intervalId = setInterval(async () => {
-    if (renderstreaming == null) {
-      return;
-    }
+let prevStats;
+function measurePerformance() {
+  setInterval(async () => {
+    if (renderstreaming == null) return;
 
     const stats = await renderstreaming.getStats();
-    if (stats == null) {
-      return;
-    }
+    if ( !stats ) return;
+    if ( !prevStats ) { prevStats = stats; return; }
 
-    const array = createDisplayStringArray(stats, lastStats);
-    if (array.length) {
-      messageDiv.style.display = "block";
-      messageDiv.innerHTML = array.join("<br>");
-    }
-    lastStats = stats;
+    stats.forEach((stat) => {
+      if (stat.type !== "inbound-rtp" || stat.kind !== "video") return;
+
+      const prevStat = prevStats.get(stat.id);
+      const duration = (stat.timestamp - prevStat.timestamp) / 1000;
+      const bitrate = (8 * (stat.bytesReceived - prevStat.bytesReceived)) / duration / 1000;
+
+      console.log(`Bitrate: ${bitrate.toFixed(2)} kbit/sec`);
+    });
+
+    prevStats = stats;
   }, 1000);
 }
 
