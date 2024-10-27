@@ -164,7 +164,7 @@ function measurePerformance() {
       if (stat.type !== "inbound-rtp" || stat.kind !== "video") return;
 
       const prevStat = prevStats.get(stat.id);
-      if( !prevStat.timestamp ) return;
+      if( !prevStat ) { console.log("prvStat not exist", stat.id); return; }
       const duration = (stat.timestamp - prevStat.timestamp) / 1000;
       const bitrate = (8 * (stat.bytesReceived - prevStat.bytesReceived)) / duration / 1000;
 
