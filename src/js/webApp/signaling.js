@@ -133,16 +133,18 @@ export class Signaling extends EventTarget {
 
 export class WebSocketSignaling extends EventTarget {
 
-  constructor(interval = 1000) {
+  constructor(url, interval = 1000) {
     super();
     this.interval = interval;
     this.sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
 
+    console.log("hostname     : ", location.hostname);
+
     let websocketUrl;
     if (location.protocol === "https:") {
-      websocketUrl = "wss://" + location.host;
+      websocketUrl = "wss://" + url; // + ":" + port;
     } else {
-      websocketUrl = "ws://" + location.host;
+      websocketUrl = "ws://" + url; // + ":" + port;
     }
 
     this.websocket = new WebSocket(websocketUrl);

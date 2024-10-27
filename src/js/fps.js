@@ -2,7 +2,7 @@ import { getServerConfig, getRTCConfiguration } from "/src/js/main/config.js";
 import { createDisplayStringArray } from "/src/js/main/stats.js";
 import { VideoPlayer } from "/src/js/main/videoplayer.js";
 import { RenderStreaming } from "/src/js/webApp/renderstreaming.js";
-import { Signaling, WebSocketSignaling } from "/src/js/webApp/signaling.js";
+import { WebSocketSignaling } from "/src/js/webApp/signaling.js";
 
 /** @type {Element} */
 let playButton;
@@ -81,7 +81,7 @@ function onClickPlayButton() {
 }
 
 async function setupRenderStreaming() {
-  const signaling = useWebSocket ? new WebSocketSignaling() : new Signaling();
+  const signaling = new WebSocketSignaling("localhost:7001");
   const config = getRTCConfiguration();
   renderstreaming = new RenderStreaming(signaling, config);
   renderstreaming.onConnect = onConnect;
