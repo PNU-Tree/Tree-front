@@ -159,6 +159,7 @@ function measurePerformance() {
     const stats = await renderstreaming.getStats();
     if ( !stats ) return;
     if ( !prevStats ) { prevStats = stats; return; }
+    if ( !prevStats.timestamp ) { prevStats = stats; return; }
 
     stats.forEach((stat) => {
       if (stat.type !== "inbound-rtp" || stat.kind !== "video") return;
@@ -167,7 +168,7 @@ function measurePerformance() {
       const duration = (stat.timestamp - prevStat.timestamp) / 1000;
       const bitrate = (8 * (stat.bytesReceived - prevStat.bytesReceived)) / duration / 1000;
 
-      console.log(`Bitrate: ${bitrate.toFixed(2)} kbit/sec`);
+      console.log(`Bitrate: ${bitrate.toFixed(2)} kbit/sec, Framerate: ${stat.framesPerSecond}`);
     });
 
     prevStats = stats;
