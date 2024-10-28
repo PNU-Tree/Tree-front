@@ -106,7 +106,7 @@ async function onDisconnect(connectionId) {
 
   const authStr = localStorage.getItem("auth");
   const auth = JSON.parse(authStr);
-  if (!auth || !auth.token || !auth.nickname) return;
+  if (!auth || !auth.token || !auth.nickname) { location.reload(); return;}
   axios
     .post(
       "http://172.171.134.142:8080/rankings",
