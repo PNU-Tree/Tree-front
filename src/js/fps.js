@@ -98,10 +98,50 @@ function onConnect() {
   const channel = renderstreaming.createDataChannel("input");
   videoPlayer.setupInput(channel);
   // showStatsMessage();
+  stopwatch.start();
 }
 
 async function onDisconnect(connectionId) {
-  clearStatsMessage();
+  stopwatch.stop();
+
+  const authStr = localStorage.getItem("auth");
+  const auth = JSON.parse(authStr);
+  if (!auth || !auth.token || !auth.nickname) return;
+  axios
+    .post(
+      "http://172.171.134.142:8080/rankings",
+      {
+        nickName: auth.nickname,
+        maxScore: stopwatch.getTimes(),
+      },
+      {
+        headers: { Authorization: auth.token },
+      }
+    )
+    .then((res) => {
+      const tostMessage = document.getElementById("tost-message");
+      tostMessage.innerText = "랭킹이 등록됐습니다!";
+      tostMessage.style.background = "#00ff0070";
+      tostMessage.classList.add("active");
+
+      setTimeout(function () {
+        tostMessage.classList.remove("active");
+        location.replace("/rank/");
+      }, 1000);
+    })
+    .catch((err) => {
+      const tostMessage = document.getElementById("tost-message");
+      tostMessage.innerText = "랭킹 등록에 실패했습니다!";
+      tostMessage.style.background = "#ff000070";
+      tostMessage.classList.add("active");
+
+      setTimeout(function () {
+        tostMessage.classList.remove("active");
+        location.replace("/");
+      }, 1000);
+    });
+
+  // clearStatsMessage();
   messageDiv.style.display = "block";
   messageDiv.innerText = `Disconnect peer on ${connectionId}.`;
 
@@ -184,3 +224,67 @@ function clearStatsMessage() {
   messageDiv.style.display = "none";
   messageDiv.innerHTML = "";
 }
+
+
+class Stopwatch {
+  constructor() {
+    this.running = false;
+    this.reset();
+    this.print(this.times);
+  }
+  reset() {
+    this.times = [0, 0, 0];
+  }
+  start() {
+    if (!this.time) this.time = performance.now();
+    if (!this.running) {
+      this.running = true;
+      requestAnimationFrame(this.step.bind(this));
+    }
+  }
+  stop() {
+    this.running = false;
+    this.time = null;
+  }
+  step(timestamp) {
+    if (!this.running) return;
+    this.calculate(timestamp);
+    this.time = timestamp;
+    this.print();
+    requestAnimationFrame(this.step.bind(this));
+  }
+  calculate(timestamp) {
+    var diff = timestamp - this.time;
+    this.times[2] += diff / 10;
+    if (this.times[2] >= 100) {
+      this.times[1] += 1;
+      this.times[2] -= 100;
+    }
+    if (this.times[1] >= 60) {
+      this.times[0] += 1;
+      this.times[1] -= 60;
+    }
+  }
+  print() {
+    const message = document.getElementById("unity-message");
+    if( !this.times || !message ) return
+    message.innerText = `소요시간: ${this.format(this.times)}`;
+  }
+  format(times) {
+    return `${pad0(times[0], 2)}:${pad0(times[1], 2)}:${pad0(
+      Math.floor(times[2]),
+      2
+    )}`;
+  }
+  getTimes() {
+    return parseInt(this.times[0] * 60 * 100 + this.times[1] * 100 + this.times[2]);
+  }
+}
+
+function pad0(value, count) {
+  var result = value.toString();
+  for (; result.length < count; --count) result = "0" + result;
+  return result;
+}
+
+const stopwatch = new Stopwatch();
